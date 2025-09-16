@@ -14,16 +14,174 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      attendance: {
+        Row: {
+          college_id: string
+          created_at: string
+          date: string
+          faculty_id: string
+          id: string
+          notes: string | null
+          status: string
+          student_id: string
+          subject: string
+        }
+        Insert: {
+          college_id: string
+          created_at?: string
+          date: string
+          faculty_id: string
+          id?: string
+          notes?: string | null
+          status: string
+          student_id: string
+          subject: string
+        }
+        Update: {
+          college_id?: string
+          created_at?: string
+          date?: string
+          faculty_id?: string
+          id?: string
+          notes?: string | null
+          status?: string
+          student_id?: string
+          subject?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attendance_college_id_fkey"
+            columns: ["college_id"]
+            isOneToOne: false
+            referencedRelation: "colleges"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attendance_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      colleges: {
+        Row: {
+          code: string
+          created_at: string
+          id: string
+          location: string | null
+          name: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          id?: string
+          location?: string | null
+          name: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          id?: string
+          location?: string | null
+          name?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          college_id: string | null
+          created_at: string
+          department: string | null
+          email: string
+          full_name: string
+          id: string
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          college_id?: string | null
+          created_at?: string
+          department?: string | null
+          email: string
+          full_name: string
+          id?: string
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          college_id?: string | null
+          created_at?: string
+          department?: string | null
+          email?: string
+          full_name?: string
+          id?: string
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      students: {
+        Row: {
+          batch_year: number | null
+          college_id: string
+          created_at: string
+          department: string
+          id: string
+          semester: number | null
+          student_id: string
+          user_id: string
+        }
+        Insert: {
+          batch_year?: number | null
+          college_id: string
+          created_at?: string
+          department: string
+          id?: string
+          semester?: number | null
+          student_id: string
+          user_id: string
+        }
+        Update: {
+          batch_year?: number | null
+          college_id?: string
+          created_at?: string
+          department?: string
+          id?: string
+          semester?: number | null
+          student_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "students_college_id_fkey"
+            columns: ["college_id"]
+            isOneToOne: false
+            referencedRelation: "colleges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_current_user_college: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      get_current_user_role: {
+        Args: Record<PropertyKey, never>
+        Returns: Database["public"]["Enums"]["user_role"]
+      }
     }
     Enums: {
-      [_ in never]: never
+      user_role: "student" | "faculty" | "administrator" | "government"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +308,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      user_role: ["student", "faculty", "administrator", "government"],
+    },
   },
 } as const
